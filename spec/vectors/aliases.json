@@ -1,0 +1,138 @@
+[
+  {
+    "name": "pubky-app-dm-unix-ms",
+    "schema": "pubky_app.dm.v0",
+    "raw": {
+      "version": 1,
+      "kind": "pubky_app.dm.v0",
+      "event_id": "5b3f9a0e-8f2c-4f4e-9d35-1c2b4a6d8e01",
+      "sent_at": 1756742400000,
+      "body": "hey — are you going on saturday?"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "alias": "chat.message.v0",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "pubky-app-dm-iso-sent-at",
+    "schema": "pubky_app.dm.v0",
+    "raw": {
+      "version": 1,
+      "kind": "pubky_app.dm.v0",
+      "event_id": "5b3f9a0e-8f2c-4f4e-9d35-1c2b4a6d8e01",
+      "sent_at": "2026-08-21T10:00:00.000Z",
+      "body": "hey — are you going on saturday?"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "alias": "chat.message.v0",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "hypercolor-shaped-pubky-app-dm",
+    "schema": "pubky_app.dm.v0",
+    "raw": {
+      "version": 1,
+      "kind": "pubky_app.dm.v0",
+      "event_id": "5b3f9a0e-8f2c-4f4e-9d35-1c2b4a6d8e01",
+      "sent_at": 1756742400000,
+      "body": "hello"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "alias": "chat.message.v0",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "marketplace-listing-message",
+    "schema": "marketplace.chat_message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "marketplace.chat_message.v0",
+      "event_id": "5b3f9a0e-8f2c-4f4e-9d35-1c2b4a6d8e01",
+      "conversation_id": "conversation:ssssssssssssssssssssssssssssssssssssssssssssssssssss_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb_0033GVVN22HJ0FYQGZZS8R2BFC",
+      "listing_ref": "listing:ssssssssssssssssssssssssssssssssssssssssssssssssssss_0033GVVN22HJ0FYQGZZS8R2BFC",
+      "sent_at": 1756742400000,
+      "body": "Is this still available?"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "alias": "chat.message.v0",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "marketplace-iso-sent-at",
+    "schema": "marketplace.chat_message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "marketplace.chat_message.v0",
+      "event_id": "5b3f9a0e-8f2c-4f4e-9d35-1c2b4a6d8e01",
+      "conversation_id": "conversation:ssssssssssssssssssssssssssssssssssssssssssssssssssss_bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb_0033GVVN22HJ0FYQGZZS8R2BFC",
+      "listing_ref": "listing:ssssssssssssssssssssssssssssssssssssssssssssssssssss_0033GVVN22HJ0FYQGZZS8R2BFC",
+      "sent_at": "2026-08-21T10:00:00.000Z",
+      "body": "Is this still available?"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "alias": "chat.message.v0",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "unknown-commerce-kind",
+    "schema": null,
+    "raw": {
+      "version": 1,
+      "kind": "commerce.foo",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "nope"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "skip",
+      "error": "unknown-kind",
+      "unprocessed": true
+    },
+    "suite": "v2"
+  }
+]

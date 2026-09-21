@@ -1,0 +1,48 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/chat.edit.v0.json",
+  "title": "chat.edit.v0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "kind",
+    "event_id",
+    "sent_at",
+    "target_event_id",
+    "body"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "chat.edit.v0"
+    },
+    "event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "sent_at": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/sentAt"
+    },
+    "target_event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mentions": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/mention"
+      }
+    }
+  },
+  "not": {
+    "required": [
+      "channel_id"
+    ]
+  }
+}

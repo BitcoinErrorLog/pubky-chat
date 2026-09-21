@@ -1,0 +1,119 @@
+[
+  {
+    "name": "hypercolor-v1-four-key",
+    "schema": "hypercolor.receiver.capabilities",
+    "raw": {
+      "version": 1,
+      "kind": "hypercolor.receiver.capabilities",
+      "receiver_path": "hypercolor/wallet",
+      "chat_kinds_v": 1
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "alias": "chat.receiver.capabilities.v0",
+      "maxBytes": 512
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "v2-document",
+    "schema": "chat.receiver.capabilities.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receiver.capabilities.v0",
+      "receiver_path": "hypercolor/wallet",
+      "chat_kinds_v": 2,
+      "kinds": [
+        "chat.message.v0",
+        "chat.context.v0",
+        "chat.proposal.propose.v0"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "maxBytes": 512
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "v2-shop-path",
+    "schema": "chat.receiver.capabilities.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receiver.capabilities.v0",
+      "receiver_path": "marketplace/wallet",
+      "chat_kinds_v": 2
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "maxBytes": 512
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "v1-extra-key-rejected",
+    "schema": "hypercolor.receiver.capabilities",
+    "raw": {
+      "version": 1,
+      "kind": "hypercolor.receiver.capabilities",
+      "receiver_path": "hypercolor/wallet",
+      "chat_kinds_v": 1,
+      "extra": true
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "duplicate-json-keys",
+    "schema": "chat.receiver.capabilities.v0",
+    "raw": "{\"version\":1,\"kind\":\"chat.receiver.capabilities.v0\",\"receiver_path\":\"hypercolor/wallet\",\"chat_kinds_v\":2,\"chat_kinds_v\":1}",
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "duplicate-key"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "over-512",
+    "schema": "chat.receiver.capabilities.v0",
+    "raw": "{\"version\":1,\"kind\":\"chat.receiver.capabilities.v0\",\"receiver_path\":\"hypercolor/wallet\",\"chat_kinds_v\":2,\"pad\":\"pppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppppp\"}",
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "oversized",
+      "maxBytes": 512
+    },
+    "suite": "v2"
+  }
+]

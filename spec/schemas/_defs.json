@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json",
+  "title": "pubky-chat shared definitions",
+  "definitions": {
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "pubky": {
+      "type": "string",
+      "minLength": 52,
+      "maxLength": 52,
+      "pattern": "^[a-z0-9]{52}$"
+    },
+    "sentAt": {
+      "type": "integer",
+      "exclusiveMinimum": 0,
+      "maximum": 8640000000000000
+    },
+    "sentAtInbound": {
+      "oneOf": [
+        {
+          "$ref": "#/definitions/sentAt"
+        },
+        {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$"
+        }
+      ]
+    },
+    "channelId": {
+      "type": "string",
+      "pattern": "^[a-z0-9]{52}:[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+    },
+    "amount": {
+      "type": "string",
+      "pattern": "^(?!0+(\\.0+)?$)[0-9]+(\\.[0-9]{1,11})?$"
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^(btc|sat|[A-Z]{3})$"
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 16,
+      "maxLength": 512,
+      "pattern": "^pubky://"
+    },
+    "receiverPath": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9.-]*/(wallet|server)$"
+    },
+    "mention": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "pubky",
+        "start",
+        "end"
+      ],
+      "properties": {
+        "pubky": {
+          "$ref": "#/definitions/pubky"
+        },
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "b64url32": {
+      "type": "string",
+      "minLength": 43,
+      "maxLength": 43,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    },
+    "b64url24": {
+      "type": "string",
+      "minLength": 32,
+      "maxLength": 32,
+      "pattern": "^[A-Za-z0-9_-]+$"
+    }
+  }
+}

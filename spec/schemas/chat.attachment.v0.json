@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/chat.attachment.v0.json",
+  "title": "chat.attachment.v0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "kind",
+    "event_id",
+    "sent_at",
+    "location",
+    "key",
+    "nonce",
+    "algorithm",
+    "contentType",
+    "size"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "chat.attachment.v0"
+    },
+    "event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "sent_at": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/sentAt"
+    },
+    "location": {
+      "type": "string",
+      "minLength": 16,
+      "pattern": "^pubky://"
+    },
+    "key": {
+      "oneOf": [
+        {
+          "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/b64url32"
+        },
+        {
+          "const": "__keystore__"
+        }
+      ]
+    },
+    "nonce": {
+      "oneOf": [
+        {
+          "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/b64url24"
+        },
+        {
+          "const": "__keystore__"
+        }
+      ]
+    },
+    "algorithm": {
+      "const": "XChaCha20Poly1305"
+    },
+    "contentType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "size": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8388608
+    },
+    "channel_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/channelId"
+    },
+    "context_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "thumbnail": {
+      "type": "object",
+      "required": [
+        "location",
+        "key",
+        "nonce"
+      ],
+      "additionalProperties": true,
+      "properties": {
+        "location": {
+          "type": "string",
+          "minLength": 16,
+          "pattern": "^pubky://"
+        },
+        "key": {
+          "oneOf": [
+            {
+              "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/b64url32"
+            },
+            {
+              "const": "__keystore__"
+            }
+          ]
+        },
+        "nonce": {
+          "oneOf": [
+            {
+              "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/b64url24"
+            },
+            {
+              "const": "__keystore__"
+            }
+          ]
+        },
+        "size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 262144
+        }
+      }
+    }
+  }
+}

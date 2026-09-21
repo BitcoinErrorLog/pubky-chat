@@ -1,0 +1,98 @@
+[
+  {
+    "name": "wot-prior-routed-auto-accept",
+    "schema": null,
+    "policy": "hypercolor-wot",
+    "input": {
+      "hasPriorRoutedConversation": true,
+      "hasExistingLink": false,
+      "isFollow": true,
+      "isFollower": true,
+      "isOrderOrOfferParticipant": false
+    },
+    "expect": {
+      "admission": "auto-accept"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "wot-stranger-request",
+    "schema": null,
+    "policy": "hypercolor-wot",
+    "input": {
+      "hasPriorRoutedConversation": false,
+      "hasExistingLink": false,
+      "isFollow": true,
+      "isFollower": true,
+      "isOrderOrOfferParticipant": false
+    },
+    "expect": {
+      "admission": "request"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "shop-order-participant-auto-accept",
+    "schema": null,
+    "policy": "shop",
+    "input": {
+      "hasPriorRoutedConversation": false,
+      "hasExistingLink": false,
+      "isFollow": false,
+      "isFollower": false,
+      "isOrderOrOfferParticipant": true
+    },
+    "expect": {
+      "admission": "auto-accept"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "shop-unnamed-ignore",
+    "schema": null,
+    "policy": "shop",
+    "input": {
+      "hasPriorRoutedConversation": false,
+      "hasExistingLink": false,
+      "isFollow": false,
+      "isFollower": false,
+      "isOrderOrOfferParticipant": false
+    },
+    "expect": {
+      "admission": "ignore"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "shop-existing-link-auto-accept",
+    "schema": null,
+    "policy": "shop",
+    "input": {
+      "hasPriorRoutedConversation": false,
+      "hasExistingLink": true,
+      "isFollow": false,
+      "isFollower": false,
+      "isOrderOrOfferParticipant": false
+    },
+    "expect": {
+      "admission": "auto-accept"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "open-always-request",
+    "schema": null,
+    "policy": "open",
+    "input": {
+      "hasPriorRoutedConversation": true,
+      "hasExistingLink": true,
+      "isFollow": true,
+      "isFollower": true,
+      "isOrderOrOfferParticipant": true
+    },
+    "expect": {
+      "admission": "request"
+    },
+    "suite": "v2"
+  }
+]

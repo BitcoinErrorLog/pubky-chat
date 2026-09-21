@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/pubky_app.dm.v0.json",
+  "title": "pubky_app.dm.v0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "kind",
+    "event_id",
+    "sent_at",
+    "body"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "pubky_app.dm.v0"
+    },
+    "event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "sent_at": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/sentAtInbound"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

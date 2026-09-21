@@ -1,0 +1,45 @@
+[
+  {
+    "name": "first-send",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "queued"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "replay-same-event-id",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "queued"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "ignore-duplicate",
+      "transcriptCount": 1
+    },
+    "suite": "v2"
+  }
+]

@@ -1,0 +1,74 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/chat.message.v0.json",
+  "title": "chat.message.v0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "kind",
+    "event_id",
+    "sent_at",
+    "body"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "chat.message.v0"
+    },
+    "event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "sent_at": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/sentAt"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reply_to": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "reply_to_author": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/pubky"
+    },
+    "mentions": {
+      "type": "array",
+      "maxItems": 8,
+      "items": {
+        "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/mention"
+      }
+    },
+    "forwarded_from_event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "forwarded_from_author": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/pubky"
+    },
+    "forwarded_from_channel_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/channelId"
+    },
+    "context_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "channel_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/channelId"
+    }
+  },
+  "dependencies": {
+    "reply_to": [
+      "reply_to_author"
+    ],
+    "reply_to_author": [
+      "reply_to"
+    ],
+    "forwarded_from_event_id": [
+      "forwarded_from_author"
+    ],
+    "forwarded_from_author": [
+      "forwarded_from_event_id"
+    ]
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/chat.group.message.v0.json",
+  "title": "chat.group.message.v0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "kind",
+    "event_id",
+    "sent_at",
+    "channel_id",
+    "body"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "chat.group.message.v0"
+    },
+    "event_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "sent_at": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/sentAt"
+    },
+    "channel_id": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/channelId"
+    },
+    "body": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reply_to": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
+    },
+    "reply_to_author": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/pubky"
+    }
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "name": "pubky-chat",
+  "private": true,
+  "version": "0.0.0",
+  "license": "MIT",
+  "description": "Pubky Encrypted-Link chat kinds spec. TypeScript packages land in a later extraction.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node scripts/check-wire-vectors.mjs",
+    "check:vectors": "node scripts/check-wire-vectors.mjs"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1"
+  }
+}

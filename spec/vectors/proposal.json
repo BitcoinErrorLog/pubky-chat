@@ -1,0 +1,400 @@
+[
+  {
+    "name": "propose",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "21.5",
+      "currency": "USD",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "open"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "counter",
+    "schema": "chat.proposal.counter.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.counter.v0",
+      "event_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "sent_at": 1757000000001,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "25",
+      "currency": "USD",
+      "supersedes_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "open"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "accept",
+    "schema": "chat.proposal.accept.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.accept.v0",
+      "event_id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "sent_at": 1757000000002,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "target_event_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "accepted"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "withdraw",
+    "schema": "chat.proposal.withdraw.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.withdraw.v0",
+      "event_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "sent_at": 1757000000001,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "withdrawn"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "reject",
+    "schema": "chat.proposal.reject.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.reject.v0",
+      "event_id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "sent_at": 1757000000002,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "reason": "too low"
+    },
+    "ctx": {
+      "senderPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "rejected"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "wrong-party-accept",
+    "schema": "chat.proposal.accept.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.accept.v0",
+      "event_id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "sent_at": 1757000000002,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "wrong-author"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "double-accept-noop",
+    "schema": "chat.proposal.accept.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.accept.v0",
+      "event_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "sent_at": 1757000000002,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "target_event_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "noop-closed"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "amount-zero",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "0",
+      "currency": "USD",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-amount"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "amount-zero-decimal",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "0.0",
+      "currency": "USD",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-amount"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "bad-currency",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "21.5",
+      "currency": "usd",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-currency"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "btc-currency",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "0.01",
+      "currency": "btc",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "open"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "sat-currency",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "21000",
+      "currency": "sat",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "open"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "supersedes-mismatch",
+    "schema": "chat.proposal.counter.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.counter.v0",
+      "event_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "sent_at": 1757000000001,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "25",
+      "currency": "USD",
+      "supersedes_event_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "bad-target-id"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "propose-channel-forbidden",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "21.5",
+      "currency": "USD",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "body": "I will take it",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "cross-context"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "worst-case-bytes",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "1234567890123",
+      "currency": "USD",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "body": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "byteSize": 831
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "oversized-proposal",
+    "schema": "chat.proposal.propose.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.proposal.propose.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "proposal_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "amount": "1234567890123",
+      "currency": "USD",
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "body": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "oversized",
+      "drop": true
+    },
+    "suite": "v2"
+  }
+]

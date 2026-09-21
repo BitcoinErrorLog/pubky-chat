@@ -1,0 +1,223 @@
+[
+  {
+    "name": "context-minimal",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "label": "Listing"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-512-subject",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "sent_at": 1757000000000,
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "label": "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 712
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-https-invalid",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "subject": "https://example.com/listing",
+      "label": "Listing"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-subject"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-short-subject",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "subject": "pubky://short",
+      "label": "Listing"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-subject"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-duplicate-subject",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      "sent_at": 1757000000000,
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "label": "Listing"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "noop-same-subject"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-second-subject",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "cccccccc-cccc-4ccc-8ccc-cccccccccccc",
+      "sent_at": 1757000000000,
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "label": "Listing"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "new-conversation"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-gated",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "label": "Listing"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "gated"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "gated-peer"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "context-channel-forbidden",
+    "schema": "chat.context.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.context.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "subject": "pubky://ssssssssssssssssssssssssssssssssssssssssssssssssssss/pub/pubky.app/pub/feed/01234567-89ab-cdef-0123-456789abcdef",
+      "label": "Listing",
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "cross-context"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "message-with-context-id",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "dddddddd-dddd-4ddd-8ddd-dddddddddddd",
+      "sent_at": 1757000000000,
+      "body": "about the listing",
+      "context_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v2"
+  },
+  {
+    "name": "message-without-context-unscoped-dm",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "plain dm"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v2"
+  }
+]

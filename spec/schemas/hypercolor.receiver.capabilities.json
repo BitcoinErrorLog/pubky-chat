@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/hypercolor.receiver.capabilities.json",
+  "title": "hypercolor.receiver.capabilities",
+  "type": "object",
+  "additionalProperties": false,
+  "minProperties": 4,
+  "maxProperties": 4,
+  "required": [
+    "version",
+    "kind",
+    "receiver_path",
+    "chat_kinds_v"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "hypercolor.receiver.capabilities"
+    },
+    "receiver_path": {
+      "const": "hypercolor/wallet"
+    },
+    "chat_kinds_v": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

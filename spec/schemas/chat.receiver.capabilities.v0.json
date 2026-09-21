@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/chat.receiver.capabilities.v0.json",
+  "title": "chat.receiver.capabilities.v0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "version",
+    "kind",
+    "receiver_path",
+    "chat_kinds_v"
+  ],
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "kind": {
+      "const": "chat.receiver.capabilities.v0"
+    },
+    "receiver_path": {
+      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/receiverPath"
+    },
+    "chat_kinds_v": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 2
+    },
+    "kinds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

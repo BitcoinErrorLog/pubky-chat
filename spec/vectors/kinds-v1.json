@@ -1,0 +1,1155 @@
+[
+  {
+    "name": "message-minimal",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "hi"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "message-reply-one-mention",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "hello",
+      "reply_to": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "reply_to_author": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mentions": [
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        }
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "tag-label-ok",
+    "schema": "chat.tag.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.tag.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "label": "ok",
+      "op": "add"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "tag-emoji",
+    "schema": "chat.tag.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.tag.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "label": "👍",
+      "op": "add"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 268
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "tag-worst-channel",
+    "schema": "chat.tag.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.tag.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "label": "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+      "op": "add",
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 401
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-1",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-16",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 771
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-16-channel",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ],
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 876
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-12",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "byteSize": 615
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "typing-start",
+    "schema": "chat.typing.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.typing.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "state": "start"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "ephemeral",
+      "byteSize": 127
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "typing-stop",
+    "schema": "chat.typing.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.typing.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "state": "stop"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "ephemeral"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "edit-hi",
+    "schema": "chat.edit.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.edit.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "body": "hi"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "delete",
+    "schema": "chat.delete.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.delete.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 168
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "pin-set",
+    "schema": "chat.pin.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.pin.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "op": "set"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 253
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "pin-clear",
+    "schema": "chat.pin.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.pin.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "op": "clear"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "invite",
+    "schema": "chat.group.invite.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.invite.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "invite_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "name": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "expires_at": 1757604800000
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "byteSize": 374
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "attachment",
+    "schema": "chat.attachment.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.attachment.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "location": "pubky://aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/pub/hypercolor.app/v1/attachments/01234567-89ab-cdef-0123-456789abcdef",
+      "key": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+      "nonce": "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB",
+      "algorithm": "XChaCha20Poly1305",
+      "contentType": "image/png",
+      "size": 1024
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "group-message",
+    "schema": "chat.group.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "body": "hello group"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "group-edit",
+    "schema": "chat.group.edit.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.edit.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "body": "edited"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "group-delete",
+    "schema": "chat.group.delete.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.delete.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "group-membership-create",
+    "schema": "chat.group.membership.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.membership.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "op": "create",
+      "name": "crew",
+      "members": [
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "group-reaction",
+    "schema": "chat.group.reaction.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.reaction.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "emoji": "👍"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "alias": "chat.tag.v0"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "dm-reaction-alias",
+    "schema": "chat.reaction.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.reaction.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "emoji": "👍"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "processed",
+      "alias": "chat.tag.v0"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "public-message-host-only",
+    "schema": "chat.public.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.public.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "body": "announce",
+      "author": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "host-only"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "oversized-known-tag",
+    "schema": "chat.tag.v0",
+    "raw": "{\"version\":1,\"kind\":\"chat.tag.v0\",\"pad\":\"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx\"}",
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "oversized",
+      "drop": true
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-17-ids",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "event-ids-cap"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "not-json",
+    "schema": "chat.tag.v0",
+    "raw": "not-json",
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "not-json"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "tag-missing-event-id",
+    "schema": "chat.tag.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.tag.v0",
+      "label": "OK"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "bad-event-id"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "tag-uppercase-label",
+    "schema": "chat.tag.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.tag.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "label": "OK",
+      "op": "add"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "invalid-label"
+    },
+    "suite": "v1",
+    "notes": "label charset is apply/parse, not JSON Schema"
+  },
+  {
+    "name": "receipt-status-seen",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "seen",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-status"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "typing-idle",
+    "schema": "chat.typing.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.typing.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "state": "idle"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "invalid-state"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "reply-without-author",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "hi",
+      "reply_to": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "reply-fields-mismatch"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "invite-bad-id",
+    "schema": "chat.group.invite.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.invite.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "invite_id": "not-a-uuid",
+      "name": "nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "expires_at": 1757604800000
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "bad-event-id"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "unknown-kind-unprocessed",
+    "schema": null,
+    "raw": {
+      "version": 1,
+      "kind": "chat.foo.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "skip",
+      "error": "unknown-kind",
+      "unprocessed": true
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "delete-with-channel",
+    "schema": "chat.delete.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.delete.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "bad-channel-id"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "wrong-author-edit",
+    "schema": "chat.edit.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.edit.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "body": "hijack"
+    },
+    "ctx": {
+      "senderPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "wrong-author"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "pin-future-lww",
+    "schema": "chat.pin.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.pin.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000360000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "op": "set"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "error": "bad-sent-at"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "duplicate-event-id",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "again"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "apply": "ignore-duplicate"
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "message-reply-8-mentions-bytes",
+    "schema": "chat.message.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.message.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "body": "hello",
+      "reply_to": "aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa",
+      "reply_to_author": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "mentions": [
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        },
+        {
+          "pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "start": 0,
+          "end": 5
+        }
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "byteSize": 927
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "typing-group",
+    "schema": "chat.typing.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.typing.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "state": "start",
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "byteSize": 232
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "edit-700",
+    "schema": "chat.edit.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.edit.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "body": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "byteSize": 876
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "pin-channel",
+    "schema": "chat.pin.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.pin.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "op": "set",
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid",
+      "byteSize": 358
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-20",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ]
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "event-ids-cap",
+      "byteSize": 927
+    },
+    "suite": "v1"
+  },
+  {
+    "name": "receipt-17-channel",
+    "schema": "chat.receipt.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.receipt.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "status": "delivered",
+      "event_ids": [
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef",
+        "01234567-89ab-cdef-0123-456789abcdef"
+      ],
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid",
+      "error": "event-ids-cap",
+      "byteSize": 915
+    },
+    "suite": "v1"
+  }
+]
