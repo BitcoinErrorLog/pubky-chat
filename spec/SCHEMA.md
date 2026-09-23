@@ -10,7 +10,7 @@ Library persistence for Encrypted-Link chat. Hosts keep a single SQLite `user_ve
 | Context thread | `ctx:{peerPubky}:{context_event_id}` |
 | Private group | `channel:{channel_id}` |
 
-`chat_contexts`: `(owner_pubky, peer_pubky, subject, context_event_id, label, sent_at)` plus a compatibility index on raw Shop `conversation_id` for one dual-read release.
+`chat_contexts`: `(owner_pubky, peer_pubky, subject, context_event_id, label, sent_at)`. No compatibility index on a raw Shop `conversation_id`.
 
 `chat_proposals`: `(owner_pubky, peer_pubky, proposal_id, state, open_event_id, terms_json, updated_at)`.
 
@@ -28,6 +28,6 @@ Sign-out / owner-switch calls `clearOwnerChatData` in this order:
 
 Wipe-guard tests must name `chat_contexts`, `chat_proposals`, and `links_archive` in the DELETE body.
 
-## Shop dual-read
+## Listing threads
 
-Live Shop Dexie listing_ref is `listing:{seller}_{listingId}` (underscore, `buildMarketplaceListingAggregateId`). Conversation aggregate is `conversation:{seller}_{buyer}_{listingId}`. Persist both raw ids. Do not prefix `listing:` onto an already-prefixed `listing_ref`. `wrap_version` 0/absent = legacy plaintext tolerated on read; new writes `wrap_version=1` only.
+Listing threads are `chat.context.v0` with `subject` a `pubky://` ref, then messages that set `context_id`. `marketplace.chat_message.v0` is not accepted inbound, and the store does not persist its raw `conversation_id` or `listing_ref`. New attachment writes use `wrap_version=1`.

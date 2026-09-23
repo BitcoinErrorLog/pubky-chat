@@ -15,11 +15,9 @@
       "peerTrust": "accepted"
     },
     "expect": {
-      "schema": "valid",
-      "alias": "chat.message.v0",
-      "apply": "processed"
+      "schema": "valid"
     },
-    "suite": "v1"
+    "suite": "historical"
   },
   {
     "name": "pubky-app-dm-iso-sent-at",
@@ -37,11 +35,9 @@
       "peerTrust": "accepted"
     },
     "expect": {
-      "schema": "valid",
-      "alias": "chat.message.v0",
-      "apply": "processed"
+      "schema": "valid"
     },
-    "suite": "v1"
+    "suite": "historical"
   },
   {
     "name": "hypercolor-shaped-pubky-app-dm",
@@ -59,11 +55,9 @@
       "peerTrust": "accepted"
     },
     "expect": {
-      "schema": "valid",
-      "alias": "chat.message.v0",
-      "apply": "processed"
+      "schema": "valid"
     },
-    "suite": "v1"
+    "suite": "historical"
   },
   {
     "name": "marketplace-listing-message",
@@ -83,11 +77,9 @@
       "peerTrust": "accepted"
     },
     "expect": {
-      "schema": "valid",
-      "alias": "chat.message.v0",
-      "apply": "processed"
+      "schema": "valid"
     },
-    "suite": "v1"
+    "suite": "historical"
   },
   {
     "name": "marketplace-iso-sent-at",
@@ -107,32 +99,8 @@
       "peerTrust": "accepted"
     },
     "expect": {
-      "schema": "valid",
-      "alias": "chat.message.v0",
-      "apply": "processed"
+      "schema": "valid"
     },
-    "suite": "v1"
-  },
-  {
-    "name": "unknown-commerce-kind",
-    "schema": null,
-    "raw": {
-      "version": 1,
-      "kind": "commerce.foo",
-      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
-      "sent_at": 1757000000000,
-      "body": "nope"
-    },
-    "ctx": {
-      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "peerTrust": "accepted"
-    },
-    "expect": {
-      "schema": "skip",
-      "error": "unknown-kind",
-      "unprocessed": true
-    },
-    "suite": "v2"
+    "suite": "historical"
   }
 ]

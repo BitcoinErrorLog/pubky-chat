@@ -1,26 +1,5 @@
 [
   {
-    "name": "hypercolor-v1-four-key",
-    "schema": "hypercolor.receiver.capabilities",
-    "raw": {
-      "version": 1,
-      "kind": "hypercolor.receiver.capabilities",
-      "receiver_path": "hypercolor/wallet",
-      "chat_kinds_v": 1
-    },
-    "ctx": {
-      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "peerTrust": "accepted"
-    },
-    "expect": {
-      "schema": "valid",
-      "alias": "chat.receiver.capabilities.v0",
-      "maxBytes": 512
-    },
-    "suite": "v1"
-  },
-  {
     "name": "v2-document",
     "schema": "chat.receiver.capabilities.v0",
     "raw": {
@@ -64,26 +43,6 @@
       "maxBytes": 512
     },
     "suite": "v2"
-  },
-  {
-    "name": "v1-extra-key-rejected",
-    "schema": "hypercolor.receiver.capabilities",
-    "raw": {
-      "version": 1,
-      "kind": "hypercolor.receiver.capabilities",
-      "receiver_path": "hypercolor/wallet",
-      "chat_kinds_v": 1,
-      "extra": true
-    },
-    "ctx": {
-      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-      "peerTrust": "accepted"
-    },
-    "expect": {
-      "schema": "invalid"
-    },
-    "suite": "v1"
   },
   {
     "name": "duplicate-json-keys",

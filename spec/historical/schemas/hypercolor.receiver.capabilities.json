@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/hypercolor.receiver.capabilities.json",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/historical/schemas/hypercolor.receiver.capabilities.json",
   "title": "hypercolor.receiver.capabilities",
   "type": "object",
   "additionalProperties": false,

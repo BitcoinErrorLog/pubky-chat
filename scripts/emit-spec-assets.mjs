@@ -1,20 +1,34 @@
 #!/usr/bin/env node
 /**
- * Emits spec/schemas/*.json and spec/vectors/*.json from the kinds-v2 contract.
+ * Emits spec/schemas, spec/vectors, and spec/historical from the kinds-v2 contract.
+ * Historical kinds are reference fixtures. v2 does not accept them inbound.
  * Run from repo root: `node scripts/emit-spec-assets.mjs`
  */
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const schemaDir = join(root, 'spec/schemas');
 const vectorDir = join(root, 'spec/vectors');
+const historicalSchemaDir = join(root, 'spec/historical/schemas');
+const historicalVectorDir = join(root, 'spec/historical/vectors');
 mkdirSync(schemaDir, { recursive: true });
 mkdirSync(vectorDir, { recursive: true });
+mkdirSync(historicalSchemaDir, { recursive: true });
+mkdirSync(historicalVectorDir, { recursive: true });
 
 const DEFS_ID = 'https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json';
 const schemaId = name => `https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/${name}.json`;
+const historicalSchemaId = name =>
+  `https://github.com/BitcoinErrorLog/pubky-chat/spec/historical/schemas/${name}.json`;
+const HISTORICAL_SCHEMA_FILES = [
+  'chat.group.reaction.v0.json',
+  'chat.reaction.v0.json',
+  'hypercolor.receiver.capabilities.json',
+  'pubky_app.dm.v0.json',
+  'marketplace.chat_message.v0.json',
+];
 const ref = name => ({ $ref: `${DEFS_ID}#/definitions/${name}` });
 
 const UUID = '01234567-89ab-cdef-0123-456789abcdef';
@@ -359,8 +373,22 @@ const schemas = {
   },
 };
 
+const historicalSchemas = {};
+for (const file of HISTORICAL_SCHEMA_FILES) {
+  const schema = schemas[file];
+  if (!schema) throw new Error(`missing historical schema ${file}`);
+  const name = file.replace(/\.json$/, '');
+  schema.$id = historicalSchemaId(name);
+  historicalSchemas[file] = schema;
+  delete schemas[file];
+}
+
 for (const [file, schema] of Object.entries(schemas)) {
   writeJson(join(schemaDir, file), schema);
+}
+for (const file of HISTORICAL_SCHEMA_FILES) {
+  rmSync(join(schemaDir, file), { force: true });
+  writeJson(join(historicalSchemaDir, file), historicalSchemas[file]);
 }
 
 function vec(name, schema, raw, expect, extra = {}) {
@@ -492,14 +520,6 @@ const kindsV1 = [
     version: 1, kind: 'chat.group.membership.v0', event_id: UUID, sent_at: SENT_AT,
     channel_id: CHANNEL_ID, op: 'create', name: 'crew', members: [PUBKY_A, PUBKY_B],
   }, { schema: 'valid', apply: 'processed' }, { suite: 'v1' }),
-  vec('group-reaction', 'chat.group.reaction.v0', {
-    version: 1, kind: 'chat.group.reaction.v0', event_id: UUID, sent_at: SENT_AT,
-    channel_id: CHANNEL_ID, target_event_id: UUID, target_author_pubky: PUBKY_A, emoji: '👍',
-  }, { schema: 'valid', apply: 'processed', alias: 'chat.tag.v0' }, { suite: 'v1' }),
-  vec('dm-reaction-alias', 'chat.reaction.v0', {
-    version: 1, kind: 'chat.reaction.v0', event_id: UUID, sent_at: SENT_AT,
-    target_event_id: UUID, target_author_pubky: PUBKY_A, emoji: '👍',
-  }, { schema: 'valid', apply: 'processed', alias: 'chat.tag.v0' }, { suite: 'v1' }),
   vec('public-message-host-only', 'chat.public.message.v0', {
     version: 1, kind: 'chat.public.message.v0', event_id: UUID, sent_at: SENT_AT,
     channel_id: `${PUBKY_A}:${UUID}`, body: 'announce', author: PUBKY_A,
@@ -689,25 +709,52 @@ const hypercolorDm = {
   body: 'hello',
 };
 
-const aliases = [
-  vec('pubky-app-dm-unix-ms', 'pubky_app.dm.v0', shopDm, {
-    schema: 'valid', alias: 'chat.message.v0', apply: 'processed',
-  }, { suite: 'v1' }),
+const historicalAliases = [
+  vec('pubky-app-dm-unix-ms', 'pubky_app.dm.v0', shopDm, { schema: 'valid' }, { suite: 'historical' }),
   vec('pubky-app-dm-iso-sent-at', 'pubky_app.dm.v0', { ...shopDm, sent_at: LEGACY_ISO }, {
-    schema: 'valid', alias: 'chat.message.v0', apply: 'processed',
-  }, { suite: 'v1' }),
-  vec('hypercolor-shaped-pubky-app-dm', 'pubky_app.dm.v0', hypercolorDm, {
-    schema: 'valid', alias: 'chat.message.v0', apply: 'processed',
-  }, { suite: 'v1' }),
-  vec('marketplace-listing-message', 'marketplace.chat_message.v0', shopMessage, {
-    schema: 'valid', alias: 'chat.message.v0', apply: 'processed',
-  }, { suite: 'v1' }),
+    schema: 'valid',
+  }, { suite: 'historical' }),
+  vec('hypercolor-shaped-pubky-app-dm', 'pubky_app.dm.v0', hypercolorDm, { schema: 'valid' }, {
+    suite: 'historical',
+  }),
+  vec('marketplace-listing-message', 'marketplace.chat_message.v0', shopMessage, { schema: 'valid' }, {
+    suite: 'historical',
+  }),
   vec('marketplace-iso-sent-at', 'marketplace.chat_message.v0', { ...shopMessage, sent_at: LEGACY_ISO }, {
-    schema: 'valid', alias: 'chat.message.v0', apply: 'processed',
-  }, { suite: 'v1' }),
+    schema: 'valid',
+  }, { suite: 'historical' }),
+];
+const unknownKind = [
   vec('unknown-commerce-kind', null, {
     version: 1, kind: 'commerce.foo', event_id: UUID, sent_at: SENT_AT, body: 'nope',
   }, { schema: 'skip', error: 'unknown-kind', unprocessed: true }, { suite: 'v2' }),
+  vec('reject-pubky-app-dm', null, shopDm, {
+    schema: 'skip', error: 'unknown-kind', unprocessed: true,
+  }, { suite: 'v2' }),
+  vec('reject-marketplace-chat-message', null, shopMessage, {
+    schema: 'skip', error: 'unknown-kind', unprocessed: true,
+  }, { suite: 'v2' }),
+  vec('reject-chat-reaction', null, {
+    version: 1, kind: 'chat.reaction.v0', event_id: UUID, sent_at: SENT_AT,
+    target_event_id: UUID, target_author_pubky: PUBKY_A, emoji: '👍',
+  }, { schema: 'skip', error: 'unknown-kind', unprocessed: true }, { suite: 'v2' }),
+  vec('reject-group-reaction', null, {
+    version: 1, kind: 'chat.group.reaction.v0', event_id: UUID, sent_at: SENT_AT,
+    channel_id: CHANNEL_ID, target_event_id: UUID, target_author_pubky: PUBKY_A, emoji: '👍',
+  }, { schema: 'skip', error: 'unknown-kind', unprocessed: true }, { suite: 'v2' }),
+  vec('reject-hypercolor-capabilities', null, {
+    version: 1, kind: 'hypercolor.receiver.capabilities', receiver_path: 'hypercolor/wallet', chat_kinds_v: 1,
+  }, { schema: 'skip', error: 'unknown-kind', unprocessed: true }, { suite: 'v2' }),
+];
+const historicalReactions = [
+  vec('group-reaction', 'chat.group.reaction.v0', {
+    version: 1, kind: 'chat.group.reaction.v0', event_id: UUID, sent_at: SENT_AT,
+    channel_id: CHANNEL_ID, target_event_id: UUID, target_author_pubky: PUBKY_A, emoji: '👍',
+  }, { schema: 'valid' }, { suite: 'historical' }),
+  vec('dm-reaction', 'chat.reaction.v0', {
+    version: 1, kind: 'chat.reaction.v0', event_id: UUID, sent_at: SENT_AT,
+    target_event_id: UUID, target_author_pubky: PUBKY_A, emoji: '👍',
+  }, { schema: 'valid' }, { suite: 'historical' }),
 ];
 
 const capV1 = {
@@ -737,15 +784,17 @@ const capOver = JSON.stringify({
   pad: 'p'.repeat(600),
 });
 
-const capabilities = [
-  vec('hypercolor-v1-four-key', 'hypercolor.receiver.capabilities', capV1, {
-    schema: 'valid', alias: 'chat.receiver.capabilities.v0', maxBytes: 512,
-  }, { suite: 'v1' }),
-  vec('v2-document', 'chat.receiver.capabilities.v0', capV2, { schema: 'valid', maxBytes: 512 }, { suite: 'v2' }),
-  vec('v2-shop-path', 'chat.receiver.capabilities.v0', capShop, { schema: 'valid', maxBytes: 512 }, { suite: 'v2' }),
+const historicalCapabilities = [
+  vec('hypercolor-v1-four-key', 'hypercolor.receiver.capabilities', capV1, { schema: 'valid' }, {
+    suite: 'historical',
+  }),
   vec('v1-extra-key-rejected', 'hypercolor.receiver.capabilities', { ...capV1, extra: true }, {
     schema: 'invalid',
-  }, { suite: 'v1' }),
+  }, { suite: 'historical' }),
+];
+const capabilities = [
+  vec('v2-document', 'chat.receiver.capabilities.v0', capV2, { schema: 'valid', maxBytes: 512 }, { suite: 'v2' }),
+  vec('v2-shop-path', 'chat.receiver.capabilities.v0', capShop, { schema: 'valid', maxBytes: 512 }, { suite: 'v2' }),
   vec('duplicate-json-keys', 'chat.receiver.capabilities.v0',
     '{"version":1,"kind":"chat.receiver.capabilities.v0","receiver_path":"hypercolor/wallet","chat_kinds_v":2,"chat_kinds_v":1}',
     { schema: 'invalid', error: 'duplicate-key' }, { suite: 'v2' }),
@@ -854,14 +903,23 @@ const files = {
   'kinds-v1.json': kindsV1,
   'context.json': context,
   'proposal.json': proposal,
-  'aliases.json': aliases,
+  'unknown-kind.json': unknownKind,
   'capabilities.json': capabilities,
   'redelivery.json': redelivery,
   'admission.json': admission,
 };
+const historicalFiles = {
+  'aliases.json': historicalAliases,
+  'reactions.json': historicalReactions,
+  'capabilities.json': historicalCapabilities,
+};
 
+rmSync(join(vectorDir, 'aliases.json'), { force: true });
 for (const [file, vectors] of Object.entries(files)) {
   writeJson(join(vectorDir, file), vectors);
+}
+for (const [file, vectors] of Object.entries(historicalFiles)) {
+  writeJson(join(historicalVectorDir, file), vectors);
 }
 
 const byteProofs = {
@@ -883,8 +941,8 @@ const byteProofs = {
   'message + reply pair + 8 mentions (body 5)': utf8(messageReplyMentions),
   'context 512-byte subject + 64-char label': utf8(context512),
   'proposal worst-case 512-byte subject': utf8(worstPropose),
-  'shop marketplace.chat_message.v0 sample': utf8(shopMessage),
-  'shop pubky_app.dm.v0 sample': utf8(shopDm),
+  'historical marketplace.chat_message.v0 sample': utf8(shopMessage),
+  'historical pubky_app.dm.v0 sample': utf8(shopDm),
   'capabilities v1': utf8(capV1),
   'capabilities v2': utf8(capV2),
 };

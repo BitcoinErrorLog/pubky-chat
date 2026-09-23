@@ -1,0 +1,47 @@
+[
+  {
+    "name": "group-reaction",
+    "schema": "chat.group.reaction.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.group.reaction.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "channel_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa:01234567-89ab-cdef-0123-456789abcdef",
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "emoji": "👍"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid"
+    },
+    "suite": "historical"
+  },
+  {
+    "name": "dm-reaction",
+    "schema": "chat.reaction.v0",
+    "raw": {
+      "version": 1,
+      "kind": "chat.reaction.v0",
+      "event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "sent_at": 1757000000000,
+      "target_event_id": "01234567-89ab-cdef-0123-456789abcdef",
+      "target_author_pubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "emoji": "👍"
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid"
+    },
+    "suite": "historical"
+  }
+]

@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 /**
- * Validate every spec vector against its JSON Schema, enforce size/admission
- * rules, and prove kinds-v1 envelopes still validate under v2 schemas.
+ * Validate v2 vectors against spec/schemas. Historical vectors under
+ * spec/historical/ are checked only against their own schemas. v2 rejects
+ * those kinds as inbound (unknown-kind, not normalized).
  */
 import { readFileSync, readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -11,6 +12,8 @@ import Ajv from 'ajv';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const schemaDir = join(root, 'spec/schemas');
 const vectorDir = join(root, 'spec/vectors');
+const historicalSchemaDir = join(root, 'spec/historical/schemas');
+const historicalVectorDir = join(root, 'spec/historical/vectors');
 const LINK_MESSAGE_MAX_BYTES = 1000;
 const MAX_CAPABILITIES_BYTES = 512;
 
@@ -18,8 +21,6 @@ const CHAT_KINDS = [
   'chat.message.v0',
   'chat.attachment.v0',
   'chat.tag.v0',
-  'chat.group.reaction.v0',
-  'chat.reaction.v0',
   'chat.receipt.v0',
   'chat.typing.v0',
   'chat.edit.v0',
@@ -40,11 +41,17 @@ const CHAT_KINDS = [
   'chat.receiver.capabilities.v0',
 ];
 
-const KNOWN_INBOUND = new Set([
-  ...CHAT_KINDS.filter(k => k !== 'chat.public.message.v0' && k !== 'chat.receiver.capabilities.v0'),
+const HISTORICAL_KINDS = new Set([
   'pubky_app.dm.v0',
   'marketplace.chat_message.v0',
+  'chat.reaction.v0',
+  'chat.group.reaction.v0',
+  'hypercolor.receiver.capabilities',
 ]);
+
+const KNOWN_INBOUND = new Set(
+  CHAT_KINDS.filter(k => k !== 'chat.public.message.v0' && k !== 'chat.receiver.capabilities.v0'),
+);
 
 const ADMISSION = {
   'hypercolor-wot': input => (input.hasPriorRoutedConversation ? 'auto-accept' : 'request'),
@@ -117,21 +124,34 @@ function peekKind(raw) {
   }
 }
 
-const ajv = new Ajv({ allErrors: true, strict: false, validateFormats: false });
-const validators = new Map();
 function jsonFiles(dir) {
   return readdirSync(dir).filter(name => name.endsWith('.json') && !name.startsWith('.'));
 }
 
-for (const file of jsonFiles(schemaDir)) {
-  const schema = JSON.parse(readFileSync(join(schemaDir, file), 'utf8'));
-  ajv.addSchema(schema);
-  if (schema.$id && file !== '_defs.json') {
-    const validate = ajv.getSchema(schema.$id);
-    if (!validate) throw new Error(`failed to compile ${file}`);
-    validators.set(file.replace(/\.json$/, ''), validate);
+function loadValidators(dir, { defs, rejectHistorical = false } = {}) {
+  const ajv = new Ajv({ allErrors: true, strict: false, validateFormats: false });
+  const validators = new Map();
+  if (defs) ajv.addSchema(defs);
+  for (const file of jsonFiles(dir)) {
+    if (file === '_defs.json') continue;
+    const name = file.replace(/\.json$/, '');
+    if (rejectHistorical && HISTORICAL_KINDS.has(name)) {
+      throw new Error(`${file} belongs in spec/historical/schemas`);
+    }
+    const schema = JSON.parse(readFileSync(join(dir, file), 'utf8'));
+    ajv.addSchema(schema);
+    if (schema.$id) {
+      const validate = ajv.getSchema(schema.$id);
+      if (!validate) throw new Error(`failed to compile ${file}`);
+      validators.set(name, validate);
+    }
   }
+  return { ajv, validators };
 }
+
+const defs = JSON.parse(readFileSync(join(schemaDir, '_defs.json'), 'utf8'));
+const { ajv, validators } = loadValidators(schemaDir, { defs, rejectHistorical: true });
+const historical = loadValidators(historicalSchemaDir, { defs });
 
 for (const kind of CHAT_KINDS) {
   if (!validators.has(kind)) {
@@ -140,10 +160,71 @@ for (const kind of CHAT_KINDS) {
 }
 
 const failures = [];
-const counts = { total: 0, v1: 0, v1ValidUnderV2: 0, schemaValid: 0, schemaInvalid: 0 };
+const counts = { total: 0, v1: 0, historical: 0, schemaValid: 0, schemaInvalid: 0, historicalRejected: 0 };
+
+for (const kind of HISTORICAL_KINDS) {
+  if (KNOWN_INBOUND.has(kind) || CHAT_KINDS.includes(kind) || validators.has(kind)) {
+    failures.push(`historical kind ${kind} is accepted as a v2 inbound kind`);
+  }
+  if (!historical.validators.has(kind)) {
+    failures.push(`missing historical schema for ${kind}`);
+  }
+}
 
 function fail(file, name, message) {
   failures.push(`${file} / ${name}: ${message}`);
+}
+
+function checkHistorical(file, vector) {
+  counts.historical += 1;
+  const name = vector.name ?? '(unnamed)';
+  const expect = vector.expect ?? {};
+  const raw = rawString(vector);
+  const kind = peekKind(raw);
+  if (expect.alias) fail(file, name, 'historical vector must not declare an inbound alias');
+  if (kind && (KNOWN_INBOUND.has(kind) || validators.has(kind))) {
+    fail(file, name, `v2 accepts historical kind ${kind} inbound`);
+  } else if (kind && HISTORICAL_KINDS.has(kind)) {
+    counts.historicalRejected += 1;
+  } else {
+    fail(file, name, `historical vector kind ${kind} is not in the historical set`);
+  }
+  if (expect.schema === 'skip' || !vector.schema) {
+    fail(file, name, 'historical vector must name its own schema');
+    return;
+  }
+  const validate = historical.validators.get(vector.schema);
+  if (!validate) {
+    fail(file, name, `no historical validator for schema ${vector.schema}`);
+    return;
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(raw);
+  } catch (error) {
+    if (expect.schema === 'invalid') {
+      counts.schemaInvalid += 1;
+      return;
+    }
+    fail(file, name, `JSON.parse: ${error.message}`);
+    return;
+  }
+  const ok = validate(parsed);
+  if (expect.schema === 'valid') {
+    counts.schemaValid += 1;
+    if (!ok) fail(file, name, `schema invalid: ${historical.ajv.errorsText(validate.errors)}`);
+  } else if (expect.schema === 'invalid') {
+    counts.schemaInvalid += 1;
+    if (ok) fail(file, name, 'expected schema invalid');
+  } else {
+    fail(file, name, `unknown expect.schema ${expect.schema}`);
+  }
+}
+
+for (const file of jsonFiles(historicalVectorDir).sort()) {
+  const vectors = JSON.parse(readFileSync(join(historicalVectorDir, file), 'utf8'));
+  if (!Array.isArray(vectors)) throw new Error(`${file} must be an array`);
+  for (const vector of vectors) checkHistorical(`historical/${file}`, vector);
 }
 
 for (const file of jsonFiles(vectorDir).sort()) {
@@ -191,6 +272,12 @@ for (const file of jsonFiles(vectorDir).sort()) {
       if (kind && KNOWN_INBOUND.has(kind)) {
         fail(file, name, `kind ${kind} is known inbound, not unprocessed`);
       }
+      if (kind && HISTORICAL_KINDS.has(kind)) counts.historicalRejected += 1;
+      continue;
+    }
+
+    if (kind && HISTORICAL_KINDS.has(kind)) {
+      fail(file, name, `historical kind ${kind} must be rejected inbound`);
       continue;
     }
 
@@ -233,14 +320,6 @@ for (const file of jsonFiles(vectorDir).sort()) {
     if (expect.schema === 'valid') {
       counts.schemaValid += 1;
       if (!ok) fail(file, name, `schema invalid: ${ajv.errorsText(validate.errors)}`);
-      if (vector.suite === 'v1') {
-        counts.v1ValidUnderV2 += 1;
-        const v2Name = vector.schema;
-        const v2 = validators.get(v2Name);
-        if (v2 && !v2(parsed)) {
-          fail(file, name, `kinds-v1 vector failed v2 schema ${v2Name}: ${ajv.errorsText(v2.errors)}`);
-        }
-      }
       if (expect.drop) {
         if (bytes <= LINK_MESSAGE_MAX_BYTES) fail(file, name, `drop vector is not > ${LINK_MESSAGE_MAX_BYTES}`);
       } else if (!expect.maxBytes && bytes > LINK_MESSAGE_MAX_BYTES) {
@@ -257,11 +336,13 @@ for (const file of jsonFiles(vectorDir).sort()) {
   }
 }
 
-if (counts.v1ValidUnderV2 < 10) {
-  failures.push(`kinds-v1 valid-under-v2 count too low: ${counts.v1ValidUnderV2}`);
+if (counts.v1 < 1) failures.push('expected kinds-v1 fixtures that are still valid v2 messages');
+if (counts.historical < 1) failures.push('expected historical reference vectors');
+if (counts.historicalRejected < HISTORICAL_KINDS.size) {
+  failures.push(`v2 rejected ${counts.historicalRejected} historical kinds, expected at least ${HISTORICAL_KINDS.size}`);
 }
-if (CHAT_KINDS.length !== 23) {
-  failures.push(`expected 23 chat.* kinds, got ${CHAT_KINDS.length}`);
+if (CHAT_KINDS.length !== 21) {
+  failures.push(`expected 21 chat.* kinds, got ${CHAT_KINDS.length}`);
 }
 
 if (failures.length > 0) {
@@ -271,5 +352,5 @@ if (failures.length > 0) {
 }
 
 console.log(
-  `PASS vectors=${counts.total} v1=${counts.v1} v1ValidUnderV2=${counts.v1ValidUnderV2} schemaValid=${counts.schemaValid} schemaInvalid=${counts.schemaInvalid} chatKinds=${CHAT_KINDS.length}`,
+  `PASS vectors=${counts.total} v1=${counts.v1} historical=${counts.historical} historicalRejected=${counts.historicalRejected} schemaValid=${counts.schemaValid} schemaInvalid=${counts.schemaInvalid} chatKinds=${CHAT_KINDS.length}`,
 );

@@ -1,0 +1,41 @@
+[
+  {
+    "name": "hypercolor-v1-four-key",
+    "schema": "hypercolor.receiver.capabilities",
+    "raw": {
+      "version": 1,
+      "kind": "hypercolor.receiver.capabilities",
+      "receiver_path": "hypercolor/wallet",
+      "chat_kinds_v": 1
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "valid"
+    },
+    "suite": "historical"
+  },
+  {
+    "name": "v1-extra-key-rejected",
+    "schema": "hypercolor.receiver.capabilities",
+    "raw": {
+      "version": 1,
+      "kind": "hypercolor.receiver.capabilities",
+      "receiver_path": "hypercolor/wallet",
+      "chat_kinds_v": 1,
+      "extra": true
+    },
+    "ctx": {
+      "senderPubky": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "ownerPubky": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "peerTrust": "accepted"
+    },
+    "expect": {
+      "schema": "invalid"
+    },
+    "suite": "historical"
+  }
+]

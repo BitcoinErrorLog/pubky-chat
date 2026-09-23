@@ -18,18 +18,9 @@ Per-receiver advertisement of which chat kinds a Paykit receiver speaks. Cap: `M
 - `chat_kinds_v`: `1` = kinds-v1.1 without context/proposal; `2` = + context/proposal. Typing/receipt emit-gate remains `>= 1`.
 - Extra keys: ignore. Duplicate keys: reject.
 
-## v1 Hypercolor document (inbound only)
+## Historical Hypercolor document
 
-```
-{
-  version: 1,
-  kind: "hypercolor.receiver.capabilities",
-  receiver_path: "hypercolor/wallet",
-  chat_kinds_v: 1
-}
-```
-
-Inbound parse of `hypercolor.receiver.capabilities` keeps four-key exactness. Inbound `chat.receiver.capabilities.v0` MUST NOT require exactly four keys.
+`hypercolor.receiver.capabilities` (exactly four keys, `receiver_path` `hypercolor/wallet`) is a historical fixture under `spec/historical/`. Validators do not accept it inbound. A v2 client reads and writes `chat.receiver.capabilities.v0` only. Inbound `chat.receiver.capabilities.v0` MUST NOT require exactly four keys.
 
 ## Paths
 

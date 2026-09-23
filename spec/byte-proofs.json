@@ -17,8 +17,8 @@
   "message + reply pair + 8 mentions (body 5)": 927,
   "context 512-byte subject + 64-char label": 712,
   "proposal worst-case 512-byte subject": 831,
-  "shop marketplace.chat_message.v0 sample": 428,
-  "shop pubky_app.dm.v0 sample": 156,
+  "historical marketplace.chat_message.v0 sample": 428,
+  "historical pubky_app.dm.v0 sample": 156,
   "capabilities v1": 108,
   "capabilities v2": 178
 }

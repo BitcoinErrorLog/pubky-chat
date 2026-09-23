@@ -4,7 +4,7 @@ Normative wire contract for Encrypted-Link Private Application Messages (PAMs). 
 
 Transport cap: `LINK_MESSAGE_MAX_BYTES = 1000` UTF-8 of `JSON.stringify`. Authorship is the Noise-authenticated link peer. A JSON `author` / `sender` field is never trusted. Extra JSON keys on a known kind: ignore. Missing required keys or wrong types: malformed. Unknown kinds: persist on the stream, leave unprocessed, never skip the transport checkpoint. Oversized **known** kinds: consume/seen, do not persist. Oversized unknown: store, unprocessed.
 
-JSON Schemas live in `spec/schemas/`. Vectors live in `spec/vectors/`. `scripts/check-wire-vectors.mjs` checks every vector against its schema and that kinds-v1 vectors still validate under v2 schemas.
+JSON Schemas live in `spec/schemas/`. Vectors live in `spec/vectors/`. Historical kinds live in `spec/historical/` and are not accepted inbound. `scripts/check-wire-vectors.mjs` checks every v2 vector against its schema, checks historical vectors only against their own schemas, and rejects those kinds as inbound.
 
 ## Envelope
 
@@ -37,7 +37,7 @@ A **link** is 1:1 with a peer. A **conversation** is `(peer, context_id | null)`
 
 Inbound `chat.message.v0` without `context_id` lands in the unscoped DM. Listing threads **must** set `context_id` outbound so two listings with the same seller do not collapse. Byte cost of `"context_id":"<uuid>"` ≈ 52 UTF-8.
 
-## Kind catalog (23 `chat.*` kinds)
+## Kind catalog (21 `chat.*` kinds)
 
 ### `chat.message.v0`
 
@@ -66,10 +66,7 @@ Access PAM. Ciphertext at `location`; key/nonce on the link; AAD = `location`. O
 
 - `label`: NFC trim; one emoji grapheme **or** `/^[a-z0-9_]{1,32}$/`; UTF-8 ≤ 32 B.
 - Add is idempotent per semantic PK. Remove deletes that row only.
-
-### `chat.group.reaction.v0` / `chat.reaction.v0`
-
-Legacy aliases for tag add (`label` / `emoji`). Dual-write one release for group senders (different `event_id`s). Decode → `chat.tag.v0` op=add.
+- `chat.reaction.v0` and `chat.group.reaction.v0` are historical (`emoji` shapes that used to decode as tag add). A v2 client sends `chat.tag.v0` only. They are not accepted inbound.
 
 ### `chat.receipt.v0`
 
@@ -205,7 +202,7 @@ Who may accept on the wire: the Noise peer who is **not** the `senderPubky` of t
 
 ### `chat.receiver.capabilities.v0`
 
-See [capabilities.md](capabilities.md). Inbound also accepts `hypercolor.receiver.capabilities` (exactly four keys). Outbound emit v2. Cap 512 UTF-8.
+See [capabilities.md](capabilities.md). Inbound and outbound are `chat.receiver.capabilities.v0` only. `hypercolor.receiver.capabilities` is historical and not accepted. Cap 512 UTF-8.
 
 ## Paykit payment kinds (not `chat.*`)
 
@@ -213,18 +210,20 @@ Official Paykit PAMs travel on the same link: `paykit.payment_request`, `paykit.
 
 ## Known-inbound registry (v2)
 
-`isKnownInboundChatKind` is the web list plus `chat.context.v0` and all five `chat.proposal.*` kinds: message, `pubky_app.dm.v0`, attachment, tag, receipt, typing, edit, delete, pin, invite, group wire kinds, Paykit payment kinds, context, propose/counter/accept/reject/withdraw. `chat.public.message.v0` stays host-only. `chat.group.invite.v0` is peek-routed, not in `GROUP_WIRE_KINDS`.
+`isKnownInboundChatKind` is message, attachment, tag, receipt, typing, edit, delete, pin, invite, group wire kinds, Paykit payment kinds, `chat.context.v0`, and all five `chat.proposal.*` kinds. `chat.public.message.v0` stays host-only. `chat.group.invite.v0` is peek-routed, not in `GROUP_WIRE_KINDS`. `pubky_app.dm.v0` and `marketplace.chat_message.v0` are not in the set.
 
-## Legacy aliases (one release)
+## Historical kinds (not accepted)
 
-| Inbound kind | Normalize to | Fields |
-|---|---|---|
-| `pubky_app.dm.v0` | `chat.message.v0` | `body`, `event_id`, `sent_at` (Unix-ms **or** ISO-8601). No `context_id`. Unscoped DM `dm:{peer}`. |
-| `marketplace.chat_message.v0` | `chat.message.v0` + synthetic context | `body`, `event_id`, `sent_at`, raw `conversation_id` (`conversation:{seller}_{buyer}_{listingId}`), raw `listing_ref`. Live Shop listing_ref is `listing:{seller}_{listingId}` (underscore). Upsert a local context: `subject` = host-resolved `pubky://` if a resolver is injected; else `legacy-subject` = the raw `listing_ref` (do **not** wrap as `listing:{listing_ref}`). Persist raw `conversation_id` on a compatibility index. |
-| `chat.group.reaction.v0` / `chat.reaction.v0` | `chat.tag.v0` op=add | existing |
-| `hypercolor.receiver.capabilities` | `chat.receiver.capabilities.v0` | four-key document, legacy parse only |
+Hypercolor and the Shop have no installed base to preserve. Clients cut over with a local reset, so v2 has no inbound aliases.
 
-Outbound: **only** `chat.*` and `paykit.payment_*`. After the window, inbound aliases become unknown-kind.
+| Kind | Status |
+|---|---|
+| `pubky_app.dm.v0` | Historical DM shape. Not normalized to `chat.message.v0`. |
+| `marketplace.chat_message.v0` | Historical listing chat. Not normalized to a message plus synthetic context. |
+| `chat.reaction.v0` / `chat.group.reaction.v0` | Historical tag-add aliases (`emoji`). Not decoded to `chat.tag.v0`. A v2 client does not emit them. |
+| `hypercolor.receiver.capabilities` | Historical four-key capabilities document. Not parsed as `chat.receiver.capabilities.v0`. |
+
+Fixtures: `spec/historical/`. Validators check them only against those schemas. Inbound v2 treats them as unknown-kind: persist on the stream, leave unprocessed, do not skip the transport checkpoint. Outbound: **only** `chat.*` and `paykit.payment_*`.
 
 ## Admission, redelivery, capabilities
 
@@ -259,8 +258,8 @@ one mention object: 82
 message + reply pair + 8 mentions (body 5): 927
 context 512-byte subject + 64-char label: 712
 proposal worst-case 512-byte subject: 831
-shop marketplace.chat_message.v0 sample: 428
-shop pubky_app.dm.v0 sample: 156
+historical marketplace.chat_message.v0 sample: 428
+historical pubky_app.dm.v0 sample: 156
 capabilities v1: 108
 capabilities v2: 178
 ```
@@ -271,12 +270,15 @@ Every listed envelope is under 1000 B (capabilities under 512 B). Literal values
 
 | File | Coverage |
 |---|---|
-| `vectors/kinds-v1.json` | kinds-v1.1 replay: valid, oversized, malformed, wrong-author, LWW, duplicate `event_id`, byte proofs |
+| `vectors/kinds-v1.json` | kinds-v1.1 envelopes that are still valid v2 messages: valid, oversized, malformed, wrong-author, LWW, duplicate `event_id`, byte proofs. Reaction aliases are not in this file. |
 | `vectors/context.json` | minimal / 512-byte subject, `invalid-subject`, duplicate subject, two subjects, gated, `cross-context`, optional `context_id` on message |
 | `vectors/proposal.json` | propose→counter→accept, withdraw, reject, wrong-party accept, double accept, amount `0`, currency, `supersedes_event_id` mismatch, oversized |
-| `vectors/aliases.json` | `pubky_app.dm.v0` Unix-ms and ISO `sent_at`; Shop `marketplace.chat_message.v0` with live `listing_ref`; unknown `commerce.foo` |
-| `vectors/capabilities.json` | v1 four-key, v2 document, Shop path, extra key, duplicate JSON keys, >512 B |
+| `vectors/unknown-kind.json` | `commerce.foo` and the historical kinds, each unprocessed |
+| `vectors/capabilities.json` | v2 document, Shop path, duplicate JSON keys, >512 B |
+| `historical/vectors/aliases.json` | `pubky_app.dm.v0` Unix-ms and ISO `sent_at`; Shop `marketplace.chat_message.v0`. Own schema only. |
+| `historical/vectors/reactions.json` | `chat.reaction.v0` and `chat.group.reaction.v0`. Own schema only. |
+| `historical/vectors/capabilities.json` | four-key `hypercolor.receiver.capabilities`, extra key rejected by that schema. |
 | `vectors/redelivery.json` | same `event_id` twice after recovery → one transcript row |
 | `vectors/admission.json` | WoT prior-routed vs stranger; Shop named/unnamed/existing-link; open |
 
-Each envelope vector is `{ name, schema, raw, ctx, expect, suite }`. `suite: v1` vectors with `expect.schema: valid` must still pass the v2 schema of the same kind.
+Each envelope vector is `{ name, schema, raw, ctx, expect, suite }`. A vector in `spec/vectors/` is a v2 message and is checked against its v2 schema. `suite: v1` marks a kinds-v1.1 fixture that is still that v2 message. It is not an inbound alias. Historical vectors are not v2 messages.

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/chat.group.reaction.v0.json",
-  "title": "chat.group.reaction.v0",
+  "$id": "https://github.com/BitcoinErrorLog/pubky-chat/spec/historical/schemas/chat.reaction.v0.json",
+  "title": "chat.reaction.v0",
   "type": "object",
   "additionalProperties": true,
   "required": [
@@ -9,7 +9,6 @@
     "kind",
     "event_id",
     "sent_at",
-    "channel_id",
     "target_event_id",
     "target_author_pubky",
     "emoji"
@@ -19,16 +18,13 @@
       "const": 1
     },
     "kind": {
-      "const": "chat.group.reaction.v0"
+      "const": "chat.reaction.v0"
     },
     "event_id": {
       "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
     },
     "sent_at": {
       "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/sentAt"
-    },
-    "channel_id": {
-      "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/channelId"
     },
     "target_event_id": {
       "$ref": "https://github.com/BitcoinErrorLog/pubky-chat/spec/schemas/_defs.json#/definitions/uuid"
@@ -41,5 +37,10 @@
       "minLength": 1,
       "maxLength": 32
     }
+  },
+  "not": {
+    "required": [
+      "channel_id"
+    ]
   }
 }

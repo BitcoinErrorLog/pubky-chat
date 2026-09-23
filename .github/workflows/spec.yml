@@ -16,4 +16,5 @@ jobs:
           node-version: "22"
           cache: npm
       - run: npm ci
-      - run: npm test
+      - name: Validate v2 vectors and reject historical inbound kinds
+        run: npm test
