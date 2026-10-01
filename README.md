@@ -2,6 +2,10 @@
 
 Encrypted-Link chat kinds for Pubky apps. Spec first; TypeScript packages (`@pubky/chat-*`) land when Hypercolor consumes them.
 
+## Design
+
+[docs/chat-unification-plan.md](docs/chat-unification-plan.md): one chat for Pubky. Prior work and decisions, MLS transport, grant-attested devices, data layout, migration, phased plan.
+
 ## Spec
 
 | Path | What |
