@@ -21,6 +21,7 @@ Sizes follow the SSO plan:
 
 - **Crypto: MLS (RFC 9420)** for every private conversation, through OpenMLS. It sits behind the library's `ChatTransport` seam, and the `pubky-chat` kinds-v2 vocabulary is carried inside it. Paykit Encrypted Links remain Paykit's payment channel.
 - **Identity:** a chat device key counts only when the user's grant names it (the `att` claim).
+- **Recovery:** the user's pubky backup. The signer derives a scoped key seed for `/priv/chat/v1/` (K6), which wraps the random archive and inbox keys stored at stable paths there. A recovery code is the fallback.
 - **Discovery and scale use four layers that work together:**
 
   | Layer | What it does |
@@ -56,6 +57,8 @@ Sizes follow the SSO plan:
 | [pubky-app-specs#142](https://github.com/pubky/pubky-app-specs/pull/142) | Social specs v1: app-neutral `{pub,priv}/social/v1/` paths and an owner-only `/priv/` tier | Open RFC |
 | **Severin's audit (2 Oct 2026)** | Read-only source audit of the Shop's messaging: 77 findings in 12 root causes. Estimates 60%+ of the messaging code needs rewriting. Unknown senders are undiscoverable, and sync takes 30+ minutes for accounts with many follows | Shared in team Slack |
 | **Orlando's question (2 Oct 2026)** | Should we adopt an existing p2p messaging library now and replace it later? | §3.9 |
+| **Andrei's scoped keys (2 Oct 2026)** | Pubky SDK derivation of stable keys scoped to grant paths (with Sev), delivered beside the grant | SDK implementation in progress. §3.2, K6 |
+| **Ben's Paykit answers (2 Oct 2026)** | Shared Paykit state per identity is by design; no WASM package, storage interface or custom-message API; signed Noise-key proof in [paykit-rs#169](https://github.com/pubky/paykit-rs/pull/169) | §4, §5 |
 
 ### 1.2 Decisions already made, and what this plan does with them
 
@@ -74,7 +77,7 @@ Sizes follow the SSO plan:
 | P9 | Request rows render only the pubky, the arrival time and local facts; profiles resolve only when the row is opened (ADR 0004 §7) | **Adopt** | |
 | P10 | Outbound status `Queued` / `Sent` / `Failed`; no "delivered" or "read" until a receipt protocol ships (UX contract §B.3) | **Adapt** | Severin's lifecycle is the receipt protocol. `Delivered` and `Read` render once acknowledgements ship in Phase 2 (§3.7) |
 | P11 | Foreground drain; an opt-in, content-free push waker later (D7) | **Adopt** | Phase 4 |
-| P12 | Random 32-byte recovery code, shown once (D6) | **Adapt** | It seals the archive key and the inbox key (§3.7) |
+| P12 | Random 32-byte recovery code, shown once (D6) | **Adapt** | The primary recovery path is the user's pubky backup: the signer-derived subtree seed for `/priv/chat/v1/` wraps the archive key and the inbox key (§3.2). The recovery code stays as an optional fallback until Ring, Bitkit and Passport all deliver scoped keys (K6) |
 | P13 | Content-addressed attachments: `blob_id`, AAD = `blob_id`, re-seed (ADR 0001 §4) | **Adopt** | |
 | P14 | DMs on Encrypted Links; groups as group-as-pubky with epoch keys; MLS "wrong first increment" (ADR 0001) | **Supersede** | §3.1 |
 | P15 | No sequencer (ADR 0001) | **Adapt** | A committer orders commits only; members fork by re-creating the group (§3.5) |
@@ -99,7 +102,7 @@ Sizes follow the SSO plan:
 | 3 | Bounded sync has no fairness; skipped work is lost on reload | L3 answers "what changed since my cursor". Cursors are durable per tag. L4 crawling round-robins with a durable per-peer cursor | I1, C2 |
 | 4 | Durable acceptance happens too late; no recipient acknowledgement | Lifecycle accepted → queued → transmitted → acknowledged. *Accepted* is the first, local, durable write, before any policy, session or crypto work. *Acknowledged* is an automatic `chat.receipt.v0` `delivered` from a recipient device | C2, C3 |
 | 5 | The receive cap consumes excess messages | **Phase 0 P0-1** in the Shop. In the library, the checkpoint advances only past messages that were persisted (kinds-v2 rule) | P0-1, C2 |
-| 6 | Local storage is disposable; sign-out clears everything | **Phase 0 P0-2** in the Shop. In the library, sign-out locks the owner-scoped store but never deletes it. The encrypted archive and recovery code restore history anywhere | P0-2, D1 |
+| 6 | Local storage is disposable; sign-out clears everything | **Phase 0 P0-2** in the Shop. In the library, sign-out locks the owner-scoped store but never deletes it. The encrypted archive restores history anywhere, unwrapped through the signer-derived seed or, as a fallback, the recovery code | P0-2, D1 |
 | 7 | Devices share one advertised receiver marker | Every app installation is its own grant-attested device record; MLS fans out to every leaf; the self group syncs devices | C3, D1 |
 | 8 | Crypto safety has no complete recovery path; stuck states and held locks | Every MLS state has a defined exit: rejoin by proposal or external commit, and committer handoff. Locks are leases with expiry. There is no "unknown" terminal state | C3 |
 | 9 | Cross-tab coordination covers crypto, not the outbox | One lease per app covers MLS state **and** the outbox. Rows are claimed with a revision. Cancel and send are transitions of the same row. Ties order by `(sent_at, event_id)` | C2 |
@@ -139,19 +142,36 @@ Sizes follow the SSO plan:
 
 ```
 pubky identity key (Ring / Bitkit / Passport; never in an app)
- └─ grant (identity, or SSO agent under H1)
-     cnf = app PoP key; caps include /pub/chat/v1/:rw
-     att = [{ purpose: "pubky-chat/device/v1", key: <device Ed25519 key> }]   ← K5
-      └─ device signature key = MLS credential (one per app installation)
-          ├─ KeyPackages
-          └─ MLS epochs → message keys
-inbox key (X25519 HPKE, per user, shared through the self group; rotated when a device is removed)
-archive key (symmetric, per user, shared through the self group; sealed under the recovery code)
+ ├─ grant (identity, or SSO agent under H1)
+ │   cnf = app PoP key; caps include /pub/chat/v1/:rw and /priv/chat/v1/:rw
+ │   att = [{ purpose: "pubky-chat/device/v1", key: <device Ed25519 key> }]   ← K5
+ │    └─ device signature key = MLS credential (one per app installation)
+ │        ├─ KeyPackages
+ │        └─ MLS epochs → message keys
+ └─ scoped key seed S(/priv/chat/v1/) (signer-derived; delivered beside the grant)   ← K6
+     ├─ HKDF "pubky-chat/archive-wrap/v1" → wraps the archive key
+     └─ HKDF "pubky-chat/inbox-wrap/v1"   → wraps each inbox key version
+inbox key (X25519 HPKE, per user, random; shared through the self group; rotated when a device is removed)
+archive key (symmetric, per user, random; shared through the self group; wrapped under S, and under the recovery code as a fallback)
 ```
 
 - **Valid device record:** the grant verifies to the pubky, `att` names the device key, the grant is unexpired, and it isn't revoked (H3).
 - **Unattested records** (Ring cookie users before R0) are marked unverified and pinned on first use.
 - Message keys are never derived from identity, grant, PoP or session material.
+- **Scoped keys (Pubky SDK, K6).** These are the SDK's hierarchical path keys. Their properties, as the SDK defines them:
+  - **Scope follows the grant.** A directory scope (`/priv/chat/v1/`) yields a subtree seed. A file scope yields a key for that exact file. Neither reaches a sibling such as `/priv/chat/v1-evil`.
+  - **Separate trees.** `/pub/` and `/priv/` derive separate trees. Chat uses `/priv/`, which adds homeserver access control to the encryption.
+  - **Domain separation.** The root derivation uses a dedicated namespace, apart from the identity signing key.
+  - **Stable.** The same scope always yields the same seed, so the user's pubky backup restores it.
+  - **Delivery.** The signer sends the seed beside the grant, in the encrypted relay payload, never inside the grant the homeserver stores. A Passport agent (SSO H1) holds scoped seeds and derives child keys locally.
+- **What the library adds.** The SDK derives stable scoped keys only. It has no purpose labels and no data-key wrapping.
+  - The chat library derives every purpose key from S with HKDF and its own versioned labels, as above. A new label version is a new key.
+  - The archive key and inbox keys stay random. S only wraps them. Wrapping a random key, rather than encrypting with S directly, is what allows rotation.
+- **Never for MLS.** S and its derived keys never become MLS credentials, KeyPackages, HPKE init keys or epoch secrets. A deterministic key there would turn the root into a single point that reveals every conversation and would remove post-compromise security.
+- **Revocation does not reach keys.** Revoking a grant stops future `/priv` reads, but a device keeps any seed and ciphertext it already downloaded. Only rotation revokes cryptographically:
+  - when a device is removed, the remaining devices rotate the inbox key and send the new version through the self group, which the removed device has left;
+  - the copy wrapped under S in `/priv/chat/v1/` is protected from that device only by homeserver access control;
+  - spec v3 states this.
 
 ### 3.3 L1: storage layout
 
@@ -166,8 +186,15 @@ archive key (symmetric, per user, shared through the self group; sealed under th
   knocks/<bucket>/<knock_id>             L2 bridge knocks (sender-owned)
   groups/<tag>/c/<epoch>                 the committer's commit slot (create-only, H7)
 /priv/chat/v1/                           read cursors, drafts, archive (encrypted under the archive key)
+  keys/archive.json                      {v, kid, wrapped}   archive key wrapped under HKDF(S, "pubky-chat/archive-wrap/v1")
+  keys/inbox/<epoch>.json                {v, epoch, wrapped} each inbox key version wrapped under HKDF(S, "pubky-chat/inbox-wrap/v1")
 ```
 
+- **Archive paths are stable.** `/priv/chat/v1/` and every archive file keep their paths for life.
+  - The seed is derived from the path, so moving the archive changes S and orphans every wrapped key.
+  - A new layout gets a new versioned root (`/priv/chat/v2/`), with a migration that re-wraps the keys.
+  - The wrap's AEAD associated data binds the owner, the path and the key version, so a wrapped key can't be moved to another path or user.
+- **Recovery needs the ciphertext too.** S comes back from the pubky backup, but history only comes back if the `/priv/chat/v1/` ciphertext survives at its original paths. That means the user's homeserver, or a backup of it that keeps the paths. `chat-backup` exports both.
 - **Path tags.** `tag` = `MLS-Exporter("pubky-chat/path/v1", group_id, 16)`. It rotates every epoch.
 - **No pubky in any path.**
 - **Padding.** Messages are padded to 256 B, 1 KiB, 4 KiB or 16 KiB. The body cap is 16 KiB.
@@ -266,8 +293,10 @@ archive key (symmetric, per user, shared through the self group; sealed under th
    - The encrypted archive (`/priv/chat/v1/`) carries history to new devices.
 4. **Multi-device is supported** through MLS devices and the self group. Every app installation is a device.
 5. **Recovery covers the archive and keys.**
-   - The recovery code (or Ring) restores the archive key and the inbox key, and with them history, contacts, read state, blocks and the inbox.
-   - The new device gets a fresh, grant-attested device key.
+   - **Primary path: the user's pubky backup, through the signer.** A new device signs in with a grant covering `/priv/chat/v1/`. Its signer derives S and delivers it beside the grant. The device unwraps the archive key and the current inbox key from `/priv/chat/v1/keys/`, and with them restores history, contacts, read state, blocks and the inbox.
+   - **Fallback: the recovery code.** It seals the same two keys for users whose signer can't yet deliver scoped keys. It is offered only while that is the case.
+   - **What has to survive:** the root (the pubky backup) and the `/priv/chat/v1/` ciphertext at its original paths.
+   - The new device gets a fresh, grant-attested device key. Recovery never restores MLS state.
    - Committers re-add it to every conversation automatically.
 6. **Definitions:**
    - **Sent:** transmitted.
@@ -333,7 +362,9 @@ archive key (symmetric, per user, shared through the self group; sealed under th
   - Sign-out and account switches lock the owner-scoped history and outbox and never delete them.
   - The at-rest key is owner-bound and survives sign-out.
   - Signing back in as the same pubky reopens it.
-- **Parked:** scope narrowing and the handshake static-key check. SSO item F2 is replaced by E1, so Shop messaging stays on the Ring cookie session until E1, and cookie removal (SSO H4) waits for E1.
+- **Dropped: Paykit scope narrowing.** Paykit state is shared per identity by design (Ben, 2 Oct), so a narrower folder scope can't isolate one app's messaging. The exposure ends when the Shop drops `/pub/paykit/:rw` after F5.
+- **Parked: the handshake static-key check** on the frozen stack. Upstream, Ben's signed Noise-key proof ([pubky/paykit-rs#169](https://github.com/pubky/paykit-rs/pull/169)) closes the App Registry key swap. We raised one gap on it: the Noise handshake doesn't yet check that the peer's static key is the signed key.
+- **Cookie sessions until E1.** SSO item F2 is replaced by E1. Shop messaging stays on Ring cookie sessions until the MLS cutover, and E1 is what brings messaging to Passport and Bitkit users. Cookie removal (SSO H4) waits for E1.
 
 **Migration (E1):**
 
@@ -354,13 +385,13 @@ archive key (symmetric, per user, shared through the self group; sealed under th
 | C1 | Spec v3: MLS profile, L1 layout, knock format, index protocol and rules, lifecycle, product definitions, public rooms v1, vectors | us, with Matt and Paykit | L | 1 |
 | C2 | TypeScript packages with lifecycle, lease, reactive store, durable cursors and drafts (Severin's state-consistency program) | us | L | 1 |
 | C3 | `pubky-chat-mls` and `chat-transport-mls` | us | L | 1–2 |
-| X1 | Independent protocol review and security audit of C1, C3, B1 and I1 | us | — | 2 |
+| X1 | Independent protocol review and security audit of C1, C3, B1 and I1, plus the key wrapping, HKDF labels and recovery path of D1 | us | — | 2 |
 | B1 | L2 bridge: sender-side blinded knocks, gate (`pow`, `contacts-only`, `postage`), Requests | us | M | 2 |
 | I1 | L3 index service (`pubky-chat-index`), first public instance, and L4 crawl in `chat-index-client` | us | M | 2 |
 | E1 | Shop on the packages, with migration (§4) | Shop team | L | 2 |
 | E2 | Hypercolor on MLS | us | M | 2 |
 | U1 | Usability set: timestamps, pagination, receipts, edit, 16 KiB bodies, attachments v1 | us | M | 2 |
-| D1 | Self group, archive, inbox-key and archive recovery, multi-device | us | L | 3 |
+| D1 | Self group, archive, multi-device, and recovery: random archive and inbox keys wrapped under HKDF-derived keys from S at stable `/priv/chat/v1/keys/` paths; recovery-code fallback; `chat-backup` export of the ciphertext with its paths | us | L | 3 |
 | E3 | pubky.app Messages | pubky-app maintainers | M | 3 |
 | E4 | Rooms private rooms (browser-held grant) and `pubky_ex` second implementation | Matt | L | 3 |
 | B2 | Switch L2 from the bridge to the native inbox (H8) | us | S | 3 |
@@ -376,16 +407,17 @@ archive key (symmetric, per user, shared through the self group; sealed under th
 | N1 | Index hosting: a second public `pubky-chat-index` instance alongside Nexus. The software is I1 | Pubky core (hosting), us (software) | 2 |
 | N2 | Nexus never indexes `/pub/chat/` | Pubky core | 1 |
 | K5 | Grant `att` claim, carried through child grants | Pubky core | 1 |
+| K6 | Scoped key derivation in the SDK (Rust, JS, FFI), delivered beside the grant in the encrypted relay payload, with signer support in Ring, Bitkit and Passport. The SDK side is in progress (Andrei). It gates D1's primary recovery path; until a signer supports it, its users get the recovery-code fallback | Pubky core (Andrei), Ring, Bitkit, Passport | 3 |
 | H7 | Create-only conditional PUT (`If-None-Match: *`) | Pubky core | 1 |
 | H3 | Grant status for verifiers | Pubky core | 1 |
-| SSO | H5, H6, R0, H1 per the SSO plan | Pubky core, Ring | per SSO |
+| SSO | H5, H6, R0, H1 per the SSO plan. Delegated grants (H1) are still core's open item; the scoped-key work doesn't design them | Pubky core, Ring | per SSO |
 
 ### Other owned decisions
 
 | Decision | Owner | Phase |
 |---|---|---|
 | Paykit keeps Encrypted Links for payments. Chat references `paykit.payment_*` kinds and never carries payment settlement itself | Paykit | 1 |
-| Paykit ships Y1 and Y2 for payments. Y3 and F2 are not needed for chat | Paykit | per SSO |
+| No Paykit work for chat or browser payments: the storage interface (Y1), the WASM package (Y2) and a custom-message API are withdrawn. Payments need nothing in the browser beyond a public read, and chat runs on MLS (Ben, 2 Oct) | Paykit | — |
 | Public rooms v1 standardizes Rooms' layout, and pubky.app renders rooms from it | Matt, us | 1 |
 | Member-list discovery for rooms uses the L3 index | Matt | 2 |
 | Membership changes wait for the committer; handover and re-creation bound the stall | us | 1 |
