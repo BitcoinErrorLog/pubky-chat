@@ -4,7 +4,7 @@ Encrypted-Link chat kinds for Pubky apps. Spec first; TypeScript packages (`@pub
 
 ## Design
 
-[docs/chat-unification-plan.md](docs/chat-unification-plan.md): one chat for Pubky. Prior work and decisions, MLS transport, grant-attested devices, data layout, migration, phased plan.
+[docs/chat-unification-plan.md](docs/chat-unification-plan.md): one chat for Pubky. MLS transport, grant-attested devices, layered discovery and scale (storage, mailbox, change-feed index, crawl fallback), message lifecycle, Shop Phase 0, phased plan and core commitments.
 
 ## Spec
 
