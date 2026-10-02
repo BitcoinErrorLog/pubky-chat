@@ -35,7 +35,8 @@ Sizes follow the SSO plan:
 - **Severin's audit** found 12 root causes in the Shop's messaging. Each maps to the design element or phase item that removes it (§2). His four programs, his message lifecycle (accepted → queued → transmitted → acknowledged) and his product definitions are adopted. All six of his open decisions are settled (§3.7).
 - **The Shop now (Phase 0):**
   - current messaging is frozen and labeled **beta**, for buyer–seller and mutual-follow chats;
-  - the Shop team fixes the two P0s only: the receive cap defers instead of consuming, and sign-out keeps history.
+  - key pinning and at-rest encryption already shipped in v0.6.45;
+  - the Shop team fixes the two P0s only: the receive cap defers instead of consuming, and sign-out keeps the already-encrypted history.
 - **Hub:** [BitcoinErrorLog/pubky-chat](https://github.com/BitcoinErrorLog/pubky-chat).
 
 ## 1. Prior work and decisions
@@ -321,14 +322,18 @@ archive key (symmetric, per user, shared through the self group; sealed under th
 
 **Phase 0 (Shop team, now):**
 
+- **Already shipped** in Shop v0.6.45 ([pubky-app#182](https://github.com/BitcoinErrorLog/pubky-app/pull/182)):
+  - peer key pinning, with Verify and Accept on a key change;
+  - at-rest encryption of history and the outbound queue;
+  - republishing the Shop's own marker when another app replaces it.
 - **Freeze.** No feature work on the current messaging stack.
 - **Label.** Messages are marked **beta**. New conversations are limited to buyer–seller (listing and order) and mutual-follow chats.
 - **P0-1, receive cap defers** (S). The intake cap stops the checkpoint at the first message it doesn't process. The rest is processed on the next tick, and nothing is consumed unread.
-- **P0-2, sign-out keeps history** (S).
+- **P0-2, sign-out keeps the already-encrypted history** (S).
   - Sign-out and account switches lock the owner-scoped history and outbox and never delete them.
-  - History stays encrypted at rest under an owner-bound key that survives sign-out. The already-reviewed at-rest encryption ships as part of this fix.
+  - The at-rest key is owner-bound and survives sign-out.
   - Signing back in as the same pubky reopens it.
-- **Everything else is parked:** key pinning, scope narrowing and the static-key check. SSO item F2 is replaced by E1, so Shop messaging stays on the Ring cookie session until E1, and cookie removal (SSO H4) waits for E1.
+- **Parked:** scope narrowing and the handshake static-key check. SSO item F2 is replaced by E1, so Shop messaging stays on the Ring cookie session until E1, and cookie removal (SSO H4) waits for E1.
 
 **Migration (E1):**
 
@@ -344,7 +349,7 @@ archive key (symmetric, per user, shared through the self group; sealed under th
 | # | Item | Owner | Size | Phase |
 |---|---|---|---|---|
 | P0-1 | Receive cap defers instead of consuming | Shop team | S | 0 |
-| P0-2 | Sign-out keeps encrypted history | Shop team | S | 0 |
+| P0-2 | Sign-out keeps the already-encrypted history | Shop team | S | 0 |
 | P0-3 | Beta label and conversation scope | Shop team | S | 0 |
 | C1 | Spec v3: MLS profile, L1 layout, knock format, index protocol and rules, lifecycle, product definitions, public rooms v1, vectors | us, with Matt and Paykit | L | 1 |
 | C2 | TypeScript packages with lifecycle, lease, reactive store, durable cursors and drafts (Severin's state-consistency program) | us | L | 1 |
