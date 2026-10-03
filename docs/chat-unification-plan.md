@@ -363,7 +363,7 @@ archive key (symmetric, per user, random; shared through the self group; wrapped
   - The at-rest key is owner-bound and survives sign-out.
   - Signing back in as the same pubky reopens it.
 - **Dropped: Paykit scope narrowing.** Paykit state is shared per identity by design (Ben, 2 Oct), so a narrower folder scope can't isolate one app's messaging. The exposure ends when the Shop drops `/pub/paykit/:rw` after F5.
-- **Parked: the handshake static-key check** on the frozen stack. Upstream, Ben's signed Noise-key proof ([pubky/paykit-rs#169](https://github.com/pubky/paykit-rs/pull/169)) closes the App Registry key swap. We raised one gap on it: the Noise handshake doesn't yet check that the peer's static key is the signed key.
+- **Parked: the handshake static-key check** on the frozen stack. Upstream, Ben's signed Noise-key proof ([pubky/paykit-rs#169](https://github.com/pubky/paykit-rs/pull/169)) closes the App Registry key swap. The handshake gap we raised on it is closed too: Ben's commits `4eda7102` and `73345917` check the peer's static key against the signed key before any transport use, on handshake completion and on restore. A mismatch fails into recovery-required, and substitution tests cover both roles and restored links. The frozen Shop stack doesn't get this check; it ends at E1/F5.
 - **Cookie sessions until E1.** SSO item F2 is replaced by E1. Shop messaging stays on Ring cookie sessions until the MLS cutover, and E1 is what brings messaging to Passport and Bitkit users. Cookie removal (SSO H4) waits for E1.
 
 **Migration (E1):**
